@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  {% load static %}
+  <title>{% block title %}Django Auth Tutorial{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+  <script src="{% static 'jquery.js' %}"></script>
+</head>
+<body>
+  {% include 'navbar.html' %}
+  <main>
+    {% block content %}
+    {% endblock %}
+  </main>
+
+</body>
+</html>
+{% if user.is_authenticated %}
+<script type="text/javascript">
+$(document).ready(function(){
+  items = JSON.stringify(localStorage)
+  hash = JSON.parse(items)
+
+  $.ajax({
+      url: "{% url 'cart_multiple' %}",
+      type: 'post',
+      data: {"items": items},
+      success: function(response, data) {
+        console.log(response)
+        Object.keys(hash).forEach(key=>{
+          console.log(key)
+          localStorage.removeItem(key)
+        })
+        count = response['count']['cart_count__sum']
+        console.log(count)
+        $("#cart_count").html(count)
+
+      },
+      failure: function(response, data) {
+          alert('Got an error dude');
+      }
+  });
+
+  // $.ajax({
+  //     url: "{% url 'cart_count' %}",
+  //     type: 'post',
+  //     success: function(response, data) {
+  //         count = response['count']['cart_count__sum']
+  //         $("#cart_count").html(count)
+  //     },
+  //     failure: function(response, data) {
+  //         alert('Got an error dude');
+  //     }
+  // });
+
+})
+
+
+
+
+</script>
+{% else %}
+
+<script type="text/javascript">
+
+function cart_logout_count(){
+  items = JSON.stringify(localStorage)
+  hash = JSON.parse(items)
+  count=0
+  Object.keys(hash).forEach(key=>{
+    count = count + parseInt(hash[key])
+  })
+  $("#cart_count").html(count)
+
+}
+
+function addCart(id) {
+  item = localStorage.getItem(id)
+  if(item){
+    item = parseInt(item) + 1
+    localStorage.setItem(id, item);
+  }else{
+    localStorage.setItem(id, 1);
+  }
+  cart_logout_count()
+
+};
+
+cart_logout_count()
+
+
+</script>
+
+{% endif %}

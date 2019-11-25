@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <table class="table">
+      {% for product in object_list %}
+          <tr>
+            <td>{{ product.product_name }}</td>
+            <td>{{ product.price }}</td>
+          {% if user.is_authenticated %}
+            <td><a href="{% url 'add' product.id %}">Add To Cart</a></td>
+          {% else %}
+          <td><a onclick="addCart({{ product.id }})" style="cursor:pointer; color: blue" >Add To Cart</a></td>
+          {% endif %}
+          </tr>
+      {% endfor %}
+    </table>
+
+{% endblock %}

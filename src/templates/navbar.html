@@ -1,0 +1,23 @@
+<div class="container">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <ul class="navbar-nav mr-auto">
+    {% if request.user.is_authenticated %}
+    <li class="nav-item active">
+      <a class="nav-link btn btn-danger" href="{% url 'logout' %}">Logout</span></a>
+    </li>
+    {% else %}
+    <li class="nav-item active">
+      <a class="nav-link btn btn-primary" href="{% url 'login' %}">Login</span></a>
+    </li>
+    <li class="nav-item active">
+      <a class="nav-link btn" href="{% url 'signup' %}">Register</span></a>
+    </li>
+    {% endif %}
+
+    <li class="nav-item active">
+      <span>Cart Count: </span>
+      <span id='cart_count'><span>
+    </li>
+  </ul>
+</nav>
+</div>
